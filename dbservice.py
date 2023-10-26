@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask
 from sqlalchemy import DateTime
 
 app = Flask(__name__)
@@ -67,3 +67,10 @@ class Payments(db.Model):
     customer_id = db.Column(db.Integer, db.ForeignKey('customers.customer_id'))
     payment_method = db.Column(db.String(255))
     amount = db.Column(db.Numeric(precision=15, scale=2))
+
+
+
+prods=Products.query.all()
+product=[prod for prod in prods]
+print(product)
+
