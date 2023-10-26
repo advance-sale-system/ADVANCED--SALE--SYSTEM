@@ -17,7 +17,6 @@ class Products (db.model):
     sales_details = db.relationship("SalesDetails", back_ref="products")
 
 
-
 class Customers (db.model):
     __tablename__ = 'customers'
     customer_id = db.Column(db.Integer, primary_key=True)
