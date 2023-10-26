@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask
 from sqlalchemy import DateTime
 
 app = Flask(__name__)
@@ -7,14 +7,15 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://postgres:2345@localhost:54
 
 db = SQLAlchemy(app)
 
-class Products (db.model):
+class Products(db.Model):
     __tablename__ = 'products'
     product_id = db.Column(db.Integer, primary_key=True)
     product_name = db.Column(db.String(255), nullable=False)
     buying_price = db.Column(db.Numeric(precision=15, scale=2), nullable=False)
     selling_price = db.Column(db.Numeric(precision=15, scale=2))
     stock_quantity = db.Column(db.Numeric(precision=15, scale=2))
-    sales_details = db.relationship("SalesDetails", back_ref="products")
+    sales_details = db.relationship("SalesDetails", backref="products")
+
 
 
 class Customers (db.model):
@@ -23,59 +24,55 @@ class Customers (db.model):
     full_name = db.Column(db.String(255))
     phone_no = db.Column(db.String(13), nullable=False)
     email = db.Column(db.String(255))
-    sales = db.relationship("Sales", back_ref="customers")
-    payments = db.relationship("Payments", back_ref="customers")
+    sales = db.relationship("Sales", backref="customers")
+    payments = db.relationship("Payments", backref="customers")
 
-
-
-class Employees(db.model):
+class Employees(db.Model):
     __tablename__ = 'employees'
     employee_id = db.Column(db.Integer, primary_key=True)
-    full_name = db.Column(db.String(255), nullable=False )
+    full_name = db.Column(db.String(255), nullable=False)
     email = db.Column(db.String(255))
-    contact = db.Column(db.Srting(13), nullable=False)
-    position = db.Column(db.Srting(255), nullable=False)
-    users = db.relationship("Users", back_ref="employees")
+    contact = db.Column(db.String(13), nullable=False)
+    position = db.Column(db.String(255), nullable=False)
+    users = db.relationship("Users", backref="employees")
 
-
-class Users(db.model):
+class Users(db.Model):
     __tablename__ = 'users'
     user_id = db.Column(db.Integer, primary_key=True)
-    employee_id = db.Column(db.Integer, db.ForeignKey('employee_id'))
+    employee_id = db.Column(db.Integer, db.ForeignKey('employees.employee_id'))
     password = db.Column(db.String(255), nullable=False)
     user_email = db.Column(db.String(255), nullable=False, unique=True)
-    sales = db.realtionship("Sales", back_ref="users")
-
+    sales = db.relationship("Sales", backref="users")
 
 class Sales(db.Model):
     __tablename__ = 'sales'
     sale_id = db.Column(db.Integer, primary_key=True)
-    customer_id = db.Column(db.Integer, db.ForeignKey('customer_id'))
-    user_id = db.Column(db.Integer, db.ForeignKey('user_id'))
+    customer_id = db.Column(db.Integer, db.ForeignKey('customers.customer_id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     total_amount = db.Column(db.Numeric(precision=15, scale=2))
     created_at = db.Column(DateTime, default=db.func.current_timestamp())
-    sales_details = db.relationship("SalesDetails", back_ref="sales")
-    payments = db.relationship("Payments", back_ref="sales")
+    sales_details = db.relationship("SaleDetails", backref="sales")
+    payments = db.relationship("Payments", backref="sales")
 
-class SaleDetails(db.model):
+class SaleDetails(db.Model):
     __tablename__ = 'sale_details'
     id = db.Column(db.Integer, primary_key=True)
-    sale_id = db.Column(db.Integer, db.ForeignKey('sale_id'))
-    product_id = db.Column(db.Integer, db.ForeignKey('product_id'))
+    sale_id = db.Column(db.Integer, db.ForeignKey('sales.sale_id'))
+    product_id = db.Column(db.Integer, db.ForeignKey('products.product_id'))
     quantity = db.Column(db.Numeric(precision=15, scale=2))
-    purchase_amount = db.Coulmn(db.Numeric(precision=15, scale=2))
+    purchase_amount = db.Column(db.Numeric(precision=15, scale=2))
 
 class Payments(db.Model):
     __tablename__ = 'payments'
     id = db.Column(db.Integer, primary_key=True)
-    sale_id = db.Column(db.Integer, db.ForeignKey('sale_id'))
-    customer_id = db.Column(db.Integer, db.ForeignKey('customer_id'))
+    sale_id = db.Column(db.Integer, db.ForeignKey('sales.sale_id'))
+    customer_id = db.Column(db.Integer, db.ForeignKey('customers.customer_id'))
     payment_method = db.Column(db.String(255))
     amount = db.Column(db.Numeric(precision=15, scale=2))
 
 
 
-
-
-
+prods=Products.query.all()
+product=[prod for prod in prods]
+print(product)
 
