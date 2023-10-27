@@ -26,27 +26,6 @@ class SaleDetails(db.Model):
     purchase_amount = db.Column(db.Numeric(precision=15, scale=2))
     product = relationship("Products", back_populates="sales_details")
 
-# class Products(db.Model):
-#     __tablename__ = 'products'
-#     product_id = db.Column(db.Integer, primary_key=True)
-#     product_name = db.Column(db.String(255), nullable=False)
-#     buying_price = db.Column(db.Numeric(precision=15, scale=2), nullable=False)
-#     selling_price = db.Column(db.Numeric(precision=15, scale=2))
-#     stock_quantity = db.Column(db.Numeric(precision=15, scale=2))
-#     # Establish the relationship using backref
-#     sales_details = db.relationship("SaleDetails", backref="product")
-
-# class SaleDetails(db.Model):
-#     __tablename__ = 'sale_details'
-#     id = db.Column(db.Integer, primary_key=True)
-#     sale_id = db.Column(db.Integer, db.ForeignKey('sales.sale_id'))
-#     product_id = db.Column(db.Integer, db.ForeignKey('products.product_id'))
-#     quantity = db.Column(db.Numeric(precision=15, scale=2))
-#     purchase_amount = db.Column(db.Numeric(precision=15, scale=2))
-#     # Establish the relationship using backref
-#     product = db.relationship("Products", backref="sales_details")
-
-
 
 class Customers (db.Model):
     __tablename__ = 'customers'
@@ -54,8 +33,9 @@ class Customers (db.Model):
     full_name = db.Column(db.String(255))
     phone_no = db.Column(db.String(13), nullable=False)
     email = db.Column(db.String(255))
-    sales = db.relationship("Sales", backref="customers")
-    payments = db.relationship("Payments", backref="customers")
+    sales = relationship("Sales", back_populates="customers")
+    payments = relationship("Payments", back_populates="customers")
+
 
 class Employees(db.Model):
     __tablename__ = 'employees'
@@ -64,7 +44,8 @@ class Employees(db.Model):
     email = db.Column(db.String(255))
     contact = db.Column(db.String(13), nullable=False)
     position = db.Column(db.String(255), nullable=False)
-    users = db.relationship("Users", backref="employees")
+    users = relationship("Users", back_populates="employees")
+
 
 class Users(db.Model):
     __tablename__ = 'users'
@@ -72,7 +53,8 @@ class Users(db.Model):
     employee_id = db.Column(db.Integer, db.ForeignKey('employees.employee_id'))
     password = db.Column(db.String(255), nullable=False)
     user_email = db.Column(db.String(255), nullable=False, unique=True)
-    sales = db.relationship("Sales", backref="users")
+    sales = relationship("Sales", back_populates="users")
+
 
 class Sales(db.Model):
     __tablename__ = 'sales'
@@ -81,8 +63,8 @@ class Sales(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     total_amount = db.Column(db.Numeric(precision=15, scale=2))
     created_at = db.Column(DateTime, default=db.func.current_timestamp())
-    sales_details = db.relationship("SaleDetails", backref="sales")
-    payments = db.relationship("Payments", backref="sales")
+    sales_details = relationship("SaleDetails", back_populates="sales")
+    payments = relationship("Payments", back_populates="sales")
 
 
 class Payments(db.Model):
