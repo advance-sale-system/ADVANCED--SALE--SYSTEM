@@ -1,10 +1,11 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
+from sqlalchemy import Column, Integer, ForeignKey, String, Numeric
+from sqlalchemy.orm import relationship
 from sqlalchemy import DateTime
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://postgres:2345@localhost:5432/duka"
-
 db = SQLAlchemy(app)
 
 class Products(db.Model):
@@ -14,11 +15,40 @@ class Products(db.Model):
     buying_price = db.Column(db.Numeric(precision=15, scale=2), nullable=False)
     selling_price = db.Column(db.Numeric(precision=15, scale=2))
     stock_quantity = db.Column(db.Numeric(precision=15, scale=2))
-    sales_details = db.relationship("SalesDetails", backref="products")
+    sales_details = relationship("SaleDetails", back_populates="product")
+
+class SaleDetails(db.Model):
+    __tablename__ = 'sale_details'
+    id = db.Column(db.Integer, primary_key=True)
+    sale_id = db.Column(db.Integer, db.ForeignKey('sales.sale_id'))
+    product_id = db.Column(db.Integer, db.ForeignKey('products.product_id'))
+    quantity = db.Column(db.Numeric(precision=15, scale=2))
+    purchase_amount = db.Column(db.Numeric(precision=15, scale=2))
+    product = relationship("Products", back_populates="sales_details")
+
+# class Products(db.Model):
+#     __tablename__ = 'products'
+#     product_id = db.Column(db.Integer, primary_key=True)
+#     product_name = db.Column(db.String(255), nullable=False)
+#     buying_price = db.Column(db.Numeric(precision=15, scale=2), nullable=False)
+#     selling_price = db.Column(db.Numeric(precision=15, scale=2))
+#     stock_quantity = db.Column(db.Numeric(precision=15, scale=2))
+#     # Establish the relationship using backref
+#     sales_details = db.relationship("SaleDetails", backref="product")
+
+# class SaleDetails(db.Model):
+#     __tablename__ = 'sale_details'
+#     id = db.Column(db.Integer, primary_key=True)
+#     sale_id = db.Column(db.Integer, db.ForeignKey('sales.sale_id'))
+#     product_id = db.Column(db.Integer, db.ForeignKey('products.product_id'))
+#     quantity = db.Column(db.Numeric(precision=15, scale=2))
+#     purchase_amount = db.Column(db.Numeric(precision=15, scale=2))
+#     # Establish the relationship using backref
+#     product = db.relationship("Products", backref="sales_details")
 
 
 
-class Customers (db.model):
+class Customers (db.Model):
     __tablename__ = 'customers'
     customer_id = db.Column(db.Integer, primary_key=True)
     full_name = db.Column(db.String(255))
@@ -54,13 +84,6 @@ class Sales(db.Model):
     sales_details = db.relationship("SaleDetails", backref="sales")
     payments = db.relationship("Payments", backref="sales")
 
-class SaleDetails(db.Model):
-    __tablename__ = 'sale_details'
-    id = db.Column(db.Integer, primary_key=True)
-    sale_id = db.Column(db.Integer, db.ForeignKey('sales.sale_id'))
-    product_id = db.Column(db.Integer, db.ForeignKey('products.product_id'))
-    quantity = db.Column(db.Numeric(precision=15, scale=2))
-    purchase_amount = db.Column(db.Numeric(precision=15, scale=2))
 
 class Payments(db.Model):
     __tablename__ = 'payments'
@@ -72,7 +95,5 @@ class Payments(db.Model):
 
 
 
-prods=Products.query.all()
-product=[prod for prod in prods]
-print(product)
+
 
