@@ -7,4 +7,26 @@ sales
 
 {% block content %}
 <h1>sales page</h1>
+<table class="table table-striped" style="width: 100%" id="my_table">
+    <thead>
+      <tr>
+        <th scope="col">Sale ID</th>
+        <th scope="col">Customer ID</th>
+        <th scope="col">User ID</th>
+        <th scope="col">Total Amount</th>
+        <th scope="col">Created_at</th>
+      </tr>
+    </thead>
+    <tbody id="products_table">
+      {% for sale in sales %}
+      <tr>
+        <td>{{ sale.sale_id }}</td>
+        <td>{{ sale.customer_id }}</td>
+        <td>{{ sale.user_id }}</td>
+        <td>{{ sale.total_amount }}</td>
+        <td>{{ sale.created_at }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 {% endblock %}
