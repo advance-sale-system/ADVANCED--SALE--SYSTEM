@@ -3,19 +3,28 @@ from flask import Flask
 # from sqlalchemy import Column, Integer, ForeignKey, String, Numeric
 from sqlalchemy.orm import relationship
 from sqlalchemy import DateTime
+from flask_login import UserMixin
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://postgres:2345@localhost:5432/duka"
+app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://postgres:2345@localhost:5432/adavanced-sale-system"
 db = SQLAlchemy(app)
 
-# class Products(db.Model):
-#     __tablename__ = 'products'
-#     product_id = db.Column(db.Integer, primary_key=True)
-#     product_name = db.Column(db.String(255), nullable=False)
-#     buying_price = db.Column(db.Numeric(precision=15, scale=2), nullable=False)
-#     selling_price = db.Column(db.Numeric(precision=15, scale=2))
-#     stock_quantity = db.Column(db.Numeric(precision=15, scale=2))
+class Products(db.Model):
+    __tablename__ = 'products'
+    product_id = db.Column(db.Integer, primary_key=True)
+    product_name = db.Column(db.String(255), nullable=False)
+    buying_price = db.Column(db.Numeric(precision=15, scale=2), nullable=False)
+    selling_price = db.Column(db.Numeric(precision=15, scale=2))
+    stock_quantity = db.Column(db.Numeric(precision=15, scale=2))
 #     sales_details = relationship("SaleDetails", back_populates="product") 
+
+class Users(db.Model, UserMixin):
+    __tablename__ = 'users'
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(255), nullable=False, unique=True)
+    password = db.Column(db.String(255), nullable=False)
+    # sales = relationship("Sales", back_populates="users") 
+    # employees = relationship("Employees", back_populates="users") 
 
 
 # class SaleDetails(db.Model):
@@ -48,14 +57,6 @@ db = SQLAlchemy(app)
 #     position = db.Column(db.String(255), nullable=False)
 #     # users = relationship("Users", back_populates="employees") 
 
-
-class Users(db.Model):
-    __tablename__ = 'users'
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(255), nullable=False, unique=True)
-    password = db.Column(db.String(255), nullable=False)
-    # sales = relationship("Sales", back_populates="users") 
-    # employees = relationship("Employees", back_populates="users") 
     
 
 # class Sales(db.Model):
