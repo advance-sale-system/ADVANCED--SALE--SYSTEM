@@ -94,11 +94,31 @@ def products():
     return render_template("products.html", products=products)
 
 
-@app.route("/sales")
+@app.route("/make-sale")
+def make_sale():
+    sale=Sales.query.get(id)
+    # retrieve form data for the sale details
+    if request.method == 'POST':
+        product_id = request.form['product_id']
+        quantity = request.form['quantity']
+        purchase_amount = request.form['purchase_amount']
+        
+
+        # create sale detail object
+        sale_detail = SaleDetails(sale_id=sale,product_id=product_id,quantity=quantity,purchase_amount=purchase_amount)
+        db.session.add(sale_detail)
+        db.session.commit
+        flash("Sale added")
+        return redirect(url_for('make_sale'))
+
+
+
+@app.route("/sales", methods=["GET"])
 def sales():
     records=Sales.query.all()
     sales=[sale for sale in records]
     return render_template("sales.html", sales=sales)
+
 
 @app.route("/logout")
 def logout():

@@ -16,26 +16,33 @@ class Products(db.Model):
     buying_price = db.Column(db.Numeric(precision=15, scale=2), nullable=False)
     selling_price = db.Column(db.Numeric(precision=15, scale=2))
     stock_quantity = db.Column(db.Numeric(precision=15, scale=2))
-#     sales_details = relationship("SaleDetails", back_populates="product") 
+    sales_details = relationship("SaleDetails", back_populates="product") 
 
 class Users(db.Model, UserMixin):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(255), nullable=False, unique=True)
     password = db.Column(db.String(255), nullable=False)
-    # sales = relationship("Sales", back_populates="users") 
-    # employees = relationship("Employees", back_populates="users") 
 
 
-# class SaleDetails(db.Model):
-#     __tablename__ = 'sale_details'
-#     id = db.Column(db.Integer, primary_key=True)
-#     sale_id = db.Column(db.Integer, db.ForeignKey('sales.sale_id'))
-#     product_id = db.Column(db.Integer, db.ForeignKey('products.product_id'))
-#     quantity = db.Column(db.Numeric(precision=15, scale=2))
-#     purchase_amount = db.Column(db.Numeric(precision=15, scale=2))
-#     product = relationship("Products", back_populates="sales_details") 
-#     sales = relationship("Sales", back_populates="sale_details") 
+class SaleDetails(db.Model):
+    __tablename__ = 'sale_details'
+    id = db.Column(db.Integer, primary_key=True)
+    sale_id = db.Column(db.Integer, db.ForeignKey('sales.sale_id'))
+    product_id = db.Column(db.Integer, db.ForeignKey('products.product_id'))
+    quantity = db.Column(db.Numeric(precision=15, scale=2))
+    purchase_amount = db.Column(db.Numeric(precision=15, scale=2))
+    product = relationship("Products", back_populates="sales_details") 
+    sales = relationship("Sales", back_populates="sale_details") 
+
+class Sales(db.Model):
+    __tablename__ = 'sales'
+    sale_id = db.Column(db.Integer, primary_key=True)
+    customer_id = db.Column(db.Integer, db.ForeignKey('customers.customer_id'))
+    total_amount = db.Column(db.Numeric(precision=15, scale=2))
+    created_at = db.Column(DateTime, default=db.func.current_timestamp())
+    is_closed = db.Column(db.Boolean, default=False)
+    sale_details = relationship("SaleDetails", back_populates="sales") 
 
 
 # class Customers (db.Model):
@@ -59,17 +66,7 @@ class Users(db.Model, UserMixin):
 
     
 
-# class Sales(db.Model):
-#     __tablename__ = 'sales'
-#     sale_id = db.Column(db.Integer, primary_key=True)
-#     customer_id = db.Column(db.Integer, db.ForeignKey('customers.customer_id'))
-#     # user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
-#     # i think payement id is not here
-#     total_amount = db.Column(db.Numeric(precision=15, scale=2))
-#     created_at = db.Column(DateTime, default=db.func.current_timestamp())
-#     sale_details = relationship("SaleDetails", back_populates="sales") 
-#     # users = relationship("Users", back_populates="sales") 
-#     customers = relationship("Customers", back_populates="sales") 
+
     
 
 # class Payments(db.Model):
