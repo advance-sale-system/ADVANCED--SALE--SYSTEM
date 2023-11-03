@@ -6,7 +6,7 @@ from sqlalchemy import DateTime
 from flask_login import UserMixin
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://postgres:2345@localhost:5432/adavanced-sale-system"
+app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://postgres:kenkivuti254@localhost:5432/advance-sale-system"
 db = SQLAlchemy(app)
 
 class Products(db.Model):
@@ -41,7 +41,6 @@ class Sales(db.Model):
     customer_id = db.Column(db.Integer, db.ForeignKey('customers.customer_id'))
     total_amount = db.Column(db.Numeric(precision=15, scale=2))
     created_at = db.Column(DateTime, default=db.func.current_timestamp())
-    is_closed = db.Column(db.Boolean, default=False)
     sale_details = relationship("SaleDetails", back_populates="sales") 
 
 

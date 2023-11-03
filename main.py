@@ -120,6 +120,11 @@ def sales():
     return render_template("sales.html", sales=sales)
 
 
+@app.route("/add-sales")
+def add_sales():
+     return render_template("addsale.html")
+
+
 @app.route("/logout")
 def logout():
     logout_user()
