@@ -26,10 +26,10 @@
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav visible-lg visible-md limit-chars">
                         <ul class="breadcrumb">
-                            <a href="index.html">
-                                <i class="zmdi zmdi-view-dashboard zmdi-hc-fw" data-toggle="tooltip" data-placement="bottom" title="Dashboard"></i>
+                            <a href="/">
+                                <i class="zmdi zmdi-view-dashboard zmdi-hc-fw" data-toggle="tooltip" data-placement="bottom" title="Home"></i>
                             </a>
-                            <a href="manage-product.html">
+                            <a href="/products">
                                 <i class="zmdi zmdi-assignment zmdi-hc-fw" data-toggle="tooltip" data-placement="bottom" title="Products"></i>
                             </a>
                         </ul>
@@ -42,6 +42,12 @@
     <div class="right content-page">
         <div class="body content rows scroll-y">
             <form action="/add-sales">
+                <!-- <select name="product_id">
+                    {% for prd in prods %}
+                    <option value="{{ prd[0] }}">{{ prd[1] }}</option>
+                    {% endfor %}
+                  </select> -->
+            </div>
                 <div class="box-info full" id="taskFormContainer">
                     <h2>New Order
                         <input name="customerName" id="customerName" type="text" class="form-control" placeholder="Customer Name" style="max-width:230px; float: right;margin-top: -11px">
@@ -77,7 +83,7 @@
                                     <span><b>Total</b></span>
                                 </div>
                                 <div class="col-sm-3">
-                                    <b><input id="product_grand_total" name="product_grand_total" class="product-grand-total" value="0.0"></input> Rs</b>
+                                    <b><input id="product_grand_total" name="product_grand_total" class="product-grand-total" value="0.0"></input> Ksh</b>
                                     <button class="btn btn-sm btn-primary pull-right" type="button" id="saveOrder">Save</button>
                                 </div>
                             </div>
@@ -99,7 +105,7 @@
                                 <input name="qty" type="number" min="1" placeholder="" class="form-control product-qty" value="1" style="max-width: 100px">
                             </div>
                             <div class="col-sm-3">
-                                <input id="item_total" name="item_total" class="product-total"></input><span> Rs</span>
+                                <input id="item_total" name="item_total" class="product-total"></input><span> Ksh</span>
                                 <button class="btn btn-sm btn-danger pull-right remove-row" type="button">Remove</button>
                             </div>
                         </div>

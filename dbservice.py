@@ -4,10 +4,17 @@ from flask import Flask
 from sqlalchemy.orm import relationship
 from sqlalchemy import DateTime
 from flask_login import UserMixin
+from wtforms import Form, SelectField
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://postgres:kenkivuti254@localhost:5432/advance-sale-system"
 db = SQLAlchemy(app)
+
+
+
+# class MyForm(Form):
+#     product = SelectField('Select a Product', choices=[(str(prod.id), prod.name) for prod in Products.query.all()])
+
 
 class Products(db.Model):
     __tablename__ = 'products'
