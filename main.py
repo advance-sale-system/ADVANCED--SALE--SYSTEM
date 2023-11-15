@@ -4,8 +4,7 @@ from dbservice import *
 from flask_login import LoginManager, logout_user, login_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
-# with app.request_context(environ):
-#     assert request.method == 'POST'
+
 
 app.secret_key = "Techcamp"
 login_manager = LoginManager(app)
@@ -138,6 +137,31 @@ def logout():
     logout_user()
     flash("Logged Out")
     return redirect(url_for("login"))
+
+@app.route("/employees" , methods=["POST" , "GET"])
+def employees():
+    if request.method == "POST":
+        full_name = request.form["full_name"]
+        email= request.form["email"]
+        contact = request.form["contact"]
+        position = request.form["position"]
+        # create new employee instance with the form data
+        new_employee = Employees(
+            full_name=full_name,
+            email=email,
+            contact=contact,
+            position=position
+        )
+        # add te new employee to the database session
+        db.session.add(new_employee)
+        # commit the changes to the database
+        db.session.commit()
+        flash("Product added succesfully")
+
+    record=Employees.query.all()
+    employee=[employe for employe in record ]
+
+    return render_template("employees.html", emp=employee)
 
 
 if __name__ == "__main__":
